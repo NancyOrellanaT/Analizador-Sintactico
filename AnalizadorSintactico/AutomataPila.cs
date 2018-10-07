@@ -9,26 +9,34 @@ namespace AnalizadorSintactico
     class AutomataPila
     {
         private List<Regla> reglas;
+        private List<string> listaTerminales;
+        private List<int> listaNumeroTerminales;
 
         private string cadena;
         private bool aceptado;
+        private Gramatica gramatica;
 
-        public AutomataPila(List<Regla> reglas)
+        public AutomataPila(List<Regla> reglas, Gramatica gramatica)
         {
             aceptado = false;
             this.reglas = reglas;
+            this.gramatica = gramatica;
+            listaTerminales = new List<string>();
+            listaNumeroTerminales = new List<int>();
         }
 
         public void Simular(string cadena)
         {
             this.cadena = cadena;
 
-            SepararAccion();
+            ContarSimbolos();
 
-            Stack<string> pila = new Stack<string>();
-            pila.Push("z0");
+            List<string> pila = new List<string>();
+            pila.Add("z0");
 
-            ProbarRegla("q0", 0, pila, new List<Regla>());
+            long t1 = CurrentTimeMillis();
+            ProbarRegla("q0", 0, pila, new List<Regla>(), "");
+            long t2 = CurrentTimeMillis();
 
             if (aceptado)
             {
@@ -38,12 +46,26 @@ namespace AnalizadorSintactico
             {
                 Console.WriteLine("No aceptado");
             }
-        }
 
-        private void ProbarRegla(string estado, int posicion, Stack<string> pila, List<Regla> camino)
+            Console.WriteLine("Se simuló en " + (t2-t1) + " ms.");
+        }
+        
+        private void ProbarRegla(string estado, int posicion, List<string> pila, List<Regla> camino, string cad)
         {
-            if (!aceptado)
+            bool seguir = Optimizar(new List<string>(pila));
+            
+            for(int i = 0; i < cad.Length; i++)
             {
+                if (!cad[i].Equals(cadena[i]))
+                {
+                    seguir = false;
+                }
+            }
+
+            if (!aceptado && seguir)
+            {
+                //Console.WriteLine(cad);
+
                 String caracter = "";
                 //El caracter actual
                 if (posicion < cadena.Length)
@@ -57,15 +79,11 @@ namespace AnalizadorSintactico
                 {
                     Regla regla = reglas[i];
 
-                    Stack<String> pilaCopia = new Stack<String>(pila.Reverse());
+                    List<String> pilaCopia = new List<String>(pila);
 
-                    List<Regla> caminoCopia = new List<Regla>();
-                    for(int k = 0; k < camino.Count; k++)
-                    {
-                        caminoCopia.Add(camino[k]);
-                    }
+                    List<Regla> caminoCopia = new List<Regla>(camino);
 
-                    estado = estadoOriginal;  
+                    estado = estadoOriginal;
 
                     //Comprobamos si es la regla adecuada 
                     if (regla.GetEstadoActual().Equals(estado))
@@ -80,28 +98,32 @@ namespace AnalizadorSintactico
                                 //Apilamos o desapilamos
                                 if (regla.GetAccion().Equals("#"))
                                 {
-                                    Stack<String> pilaAux = new Stack<String>();
+                                    List<String> pilaAux = new List<String>();
                                     for(int k = 0; k < pilaCopia.Count - 1; k++)
                                     {
-                                        pilaAux.Push(pilaCopia.ElementAt(k));
+                                        pilaAux.Add(pilaCopia.ElementAt(k));
                                     }
                                     pilaCopia = pilaAux;
                                 }
                                 else if (!regla.GetAccion().Equals("Z"))
                                 {
-                                    for (int j = 0; j < regla.GetAccion().Length; j++)
+                                    int menos = 2;
+
+                                    if (regla.GetAccion()[regla.GetAccion().Length - 1] != 'Z')
                                     {
-                                        pilaCopia.Push(regla.GetAccion()[j] + "");
+                                        pilaCopia.RemoveAt(pilaCopia.Count - 1);
+                                        menos = 1;
+                                    }
+
+                                    for (int j = regla.GetAccion().Length - menos; j >= 0; j--)
+                                    {
+                                        pilaCopia.Add(regla.GetAccion()[j] + "");
                                     }
                                 }
                                 caminoCopia.Add(regla);
-                                List<Regla> caminoCopia2 = new List<Regla>();
-                                for (int k = 0; k < caminoCopia.Count; k++)
-                                {
-                                    caminoCopia2.Add(caminoCopia[k]);
-                                }
 
-                                ProbarRegla(estado, posicion + 1, new Stack<String>(pilaCopia), caminoCopia2);
+                                cad += regla.GetEntrada();
+                                ProbarRegla(estado, posicion + 1, new List<String>(pilaCopia), new List<Regla>(caminoCopia), cad);
                             }
                             else if (regla.GetEntrada().Equals("#"))
                             {
@@ -109,36 +131,38 @@ namespace AnalizadorSintactico
                                 //Apilamos o desapilamos
                                 if (regla.GetAccion().Equals("#"))
                                 {
-                                    Stack<String> pilaAux = new Stack<String>();
+                                    List<String> pilaAux = new List<String>();
                                     for (int k = 0; k < pilaCopia.Count - 1; k++)
                                     {
-                                        pilaAux.Push(pilaCopia.ElementAt(k));
+                                        pilaAux.Add(pilaCopia.ElementAt(k));
                                     }
                                     pilaCopia = pilaAux;
                                 }
                                 else if (!regla.GetAccion().Equals("Z"))
                                 {
-                                    for (int j = 0; j < regla.GetAccion().Length; j++)
+                                    int menos = 2;
+
+                                    if (regla.GetAccion()[regla.GetAccion().Length - 1] != 'Z')
                                     {
-                                        pilaCopia.Push(regla.GetAccion()[j]+"");
+                                        pilaCopia.RemoveAt(pilaCopia.Count - 1);
+                                        menos = 1;
+                                    }
+                                    
+                                    for (int j = regla.GetAccion().Length - menos; j >= 0; j--)
+                                    {
+                                        pilaCopia.Add(regla.GetAccion()[j] + "");
                                     }
                                 }
 
                                 caminoCopia.Add(regla);
-                                List<Regla> caminoCopia2 = new List<Regla>();
-                                for (int k = 0; k < caminoCopia.Count; k++)
-                                {
-                                    caminoCopia2.Add(caminoCopia[k]);
-                                }
-
-                                ProbarRegla(estado, posicion + 1, new Stack<String>(pilaCopia), caminoCopia2);
+                                ProbarRegla(estado, posicion, new List<String>(pilaCopia), new List<Regla>(caminoCopia), cad);
                             }
                         }
                     }
                 }
             }
 
-            if (posicion == cadena.Length || (posicion == 0 && cadena.Equals("#")))
+            if (cad.Equals(cadena) && (posicion == cadena.Length || (posicion == 0 && cadena.Equals("#"))))
             {
                 if (pila.Count - 1 >= 0 && pila.ElementAt(pila.Count - 1).Equals("z0"))
                 {
@@ -147,22 +171,89 @@ namespace AnalizadorSintactico
             }
         }
 
-        private void SepararAccion()
+        private bool Optimizar(List<string> pila)
         {
-            List<Regla> lista = reglas;
+            int terminales = 0;
+            
 
-            foreach (Regla regla in lista)
+            for (int i = 0; i < pila.Count; i++)
             {
-                String[] accion = regla.GetAccion().Split(regla.GetCimaPila()[0]);
-                try
+                for (int j = 0; j < gramatica.GetTerminales().Count; j++)
                 {
-                    regla.SetAccion(accion[0]);
+                    if (pila[i].Equals(gramatica.GetTerminales()[j]))
+                    {
+                        ++terminales;
+
+                        if (cadena.Length < terminales)
+                        {
+                            return false;
+                        }
+                       
+                        break;
+                    }
                 }
-                catch
+            }
+
+            for(int i = 0; i < listaTerminales.Count; i++)
+            {
+                int conteo = 0;
+
+                for(int j = 0; j < cadena.Length; j++)
                 {
+                    if (cadena[j].ToString().Equals(listaTerminales[i]))
+                    {
+                        conteo++;
+                    }
+                }
+
+                if (conteo > listaNumeroTerminales[i])
+                {
+                    return false;
+                }
+            }
+
+
+            return true;
+        }
+
+        private void ContarSimbolos()
+        {
+            bool nuevoTerminal = true;
+
+            for (int i = 0; i < cadena.Length; i++)
+            {
+                for (int j = 0; j < gramatica.GetTerminales().Count; j++)
+                {
+                    if ((cadena[i] + "").Equals(gramatica.GetTerminales()[j]))
+                    {
+                        nuevoTerminal = false;
+                        for (int k = 0; k < listaTerminales.Count; k++)
+                        {
+                            if ((cadena[i] + "").Equals(listaTerminales[k].ToString()))
+                            {
+                                listaNumeroTerminales[k]++;
+                                nuevoTerminal = true;
+                            }
+                        }
+                        if (!nuevoTerminal)
+                        {
+                            listaTerminales.Add(cadena[i].ToString());
+                            listaNumeroTerminales.Add(1);
+                            nuevoTerminal = false;
+                        }
+                    }
                 }
             }
         }
+
+        private static readonly DateTime Jan1st1970 = new DateTime
+        (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        public static long CurrentTimeMillis()
+        {
+            return (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
+        }
+
 
     }
 }

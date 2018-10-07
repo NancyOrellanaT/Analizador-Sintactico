@@ -23,10 +23,10 @@ namespace AnalizadorSintactico
         {
             for(int i = 0; i < reglas.Count; i++)
             {
-                Console.WriteLine(reglas[i].AString());
+               //Console.WriteLine(reglas[i].AString());
             }
 
-            AutomataPila automata = new AutomataPila(reglas);
+            AutomataPila automata = new AutomataPila(reglas, gramatica);
             automata.Simular(cadena);
         }
 
@@ -36,7 +36,7 @@ namespace AnalizadorSintactico
             List<string> terminales = gramatica.GetTerminales();
             string noTerminalActual = "";
 
-            Regla regla = new Regla("q0", "#", "Z", "q1", gramatica.GetSimboloInicial());
+            Regla regla = new Regla("q0", "#", "Z", "q1", gramatica.GetSimboloInicial() + "Z");
             reglas.Add(regla);
 
             for (int i = 0; i < gramatica.GetNoTerminales().Count; i++)
@@ -65,7 +65,7 @@ namespace AnalizadorSintactico
                 reglas.Add(regla);
             }
 
-            regla = new Regla("q1", "#", "Z", "q2", "#");
+            regla = new Regla("q1", "#", "Z", "q2", "Z");
             reglas.Add(regla);
         }
 

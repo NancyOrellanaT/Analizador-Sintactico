@@ -10,28 +10,24 @@ namespace AnalizadorSintactico
     {
         static void Main(string[] args)
         {
-
             List<string> terminales = new List<string>();
             List<string> noTerminales = new List<string>();
 
-            terminales.Add("0");
             terminales.Add("1");
-            terminales.Add("a");
-            terminales.Add("b");
             terminales.Add("+");
-            terminales.Add("*");
-            terminales.Add("(");
-            terminales.Add(")");
+            terminales.Add("-");
 
+            noTerminales.Add("S");
             noTerminales.Add("E");
-            noTerminales.Add("I");
 
-            Gramatica gramatica = new Gramatica("E", Archivo.LeerArchivo("../../Reglas.txt"), terminales, noTerminales);
-            
+            Gramatica gramatica = new Gramatica("S", Archivo.LeerArchivo("../../Reglas.txt"), terminales, noTerminales);
+
             AnalizadorSintactico analizador = new AnalizadorSintactico(gramatica);
-            analizador.Analizar("a+b");
-
+            analizador.Analizar("1-1+1-1+1+1+1+1+1+1+1+1+1+1+1+1");
+            
             Console.ReadKey();
         }
+        
     }
+
 }
