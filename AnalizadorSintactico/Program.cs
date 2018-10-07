@@ -10,14 +10,32 @@ namespace AnalizadorSintactico
     {
         static void Main(string[] args)
         {
-            //Archivo.LeerArchivo("../../Reglas.txt");
 
-            List<Regla> lista = new List<Regla>();
-            lista.Add(new Regla("q0", "a", "Z", "q1", "AZ"));
-            lista.Add(new Regla("q1", "a", "A", "q0", "#"));
+            List<string> terminales = new List<string>();
+            List<string> noTerminales = new List<string>();
 
-            AutomataPila automata = new AutomataPila("a", lista);
-            automata.Simular();
+            terminales.Add("1");
+            terminales.Add("2");
+            terminales.Add("3");
+            terminales.Add("4");
+            terminales.Add("5");
+            terminales.Add("6");
+            terminales.Add("7");
+            terminales.Add("8");
+            terminales.Add("9");
+            terminales.Add("+");
+            terminales.Add("-");
+            terminales.Add("*");
+            terminales.Add("/");
+            terminales.Add("^");
+
+            noTerminales.Add("S");
+            noTerminales.Add("D");
+
+            Gramatica gramatica = new Gramatica("S", Archivo.LeerArchivo("../../Reglas.txt"), terminales, noTerminales);
+            
+            AnalizadorSintactico analizador = new AnalizadorSintactico(gramatica);
+            analizador.Analizar("9+5");
 
             Console.ReadKey();
         }

@@ -8,23 +8,24 @@ namespace AnalizadorSintactico
 {
     class AnalizadorSintactico
     {
+
         private Gramatica gramatica;
-        private string entrada;
         private List<Regla> reglas;
 
-        public AnalizadorSintactico()
-        {
-            reglas = new List<Regla>();
-            entrada = "";
-        }
-
-        public void Analizar(Gramatica gramatica)
+        public AnalizadorSintactico(Gramatica gramatica)
         {
             this.gramatica = gramatica;
+            reglas = new List<Regla>();
             ConvertirGramaticaAutomata();
         }
 
-        public List<Regla> ConvertirGramaticaAutomata()
+        public void Analizar(string cadena)
+        {
+            AutomataPila automata = new AutomataPila(reglas);
+            automata.Simular(cadena);
+        }
+
+        public void ConvertirGramaticaAutomata()
         {
             List<string> noTerminales = gramatica.GetNoTerminales();
             List<string> terminales = gramatica.GetTerminales();
@@ -55,8 +56,7 @@ namespace AnalizadorSintactico
                 Regla regla = new Regla("q", terminales[i].ToString(), terminales[i].ToString(), "q", "#");
                 reglas.Add(regla);
             }
-
-            return reglas;
         }
+
     }
 }

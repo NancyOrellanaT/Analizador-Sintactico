@@ -13,15 +13,16 @@ namespace AnalizadorSintactico
         private string cadena;
         private bool aceptado;
 
-        public AutomataPila(string cadena, List<Regla> reglas)
+        public AutomataPila(List<Regla> reglas)
         {
-            this.cadena = cadena;
             aceptado = false;
             this.reglas = reglas;
         }
 
-        public void Simular()
+        public void Simular(string cadena)
         {
+            this.cadena = cadena;
+
             SepararAccion();
 
             Stack<string> pila = new Stack<string>();
@@ -37,7 +38,6 @@ namespace AnalizadorSintactico
             {
                 Console.WriteLine("No aceptado");
             }
-            
         }
 
         private void ProbarRegla(string estado, int posicion, Stack<string> pila, List<Regla> camino)
@@ -70,9 +70,6 @@ namespace AnalizadorSintactico
                     //Comprobamos si es la regla adecuada 
                     if (regla.GetEstadoActual().Equals(estado))
                     {
-                        string cimapila = regla.GetCimaPila();
-                        string pilacima = pilaCopia.ElementAt(pilaCopia.Count - 1);
-
                         //Comprobamos el tope de la pila
                         if (regla.GetCimaPila().Equals(pilaCopia.ElementAt(pilaCopia.Count - 1)) || regla.GetCimaPila().Equals("Z"))
                         {
@@ -161,9 +158,8 @@ namespace AnalizadorSintactico
                 {
                     regla.SetAccion(accion[0]);
                 }
-                catch (Exception e)
+                catch
                 {
-
                 }
             }
         }
