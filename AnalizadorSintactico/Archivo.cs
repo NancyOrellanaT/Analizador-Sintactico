@@ -13,38 +13,16 @@ namespace AnalizadorSintactico
         public static List<Produccion> LeerArchivo(string direccionArchivo)
         {
             List<Produccion> producciones = new List<Produccion>();
-
-            string[] lado = new string[2];
-
-            string line;
-            try
+            
+            FileStream fileStream = new FileStream(direccionArchivo, FileMode.Open, FileAccess.Read);
+            using (StreamReader streamReader = new StreamReader(fileStream, Encoding.UTF8))
             {
-                StreamReader sr = new StreamReader(direccionArchivo);
-
-                line = sr.ReadLine();
-
-                lado = line.Split(',');
-
-                producciones.Add(new Produccion(lado[0], lado[1]));
-
-                while (line != null)
+                string line;
+                while ((line = streamReader.ReadLine()) != null)
                 {
-                    line = sr.ReadLine();
-                    lado = line.Split(',');
-                    producciones.Add(new Produccion(lado[0], lado[1]));
+                    string[] linea = line.Split(',');
+                    producciones.Add(new Produccion(linea[0], linea[1]));
                 }
-
-                sr.Close();
-                Console.ReadLine();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception: " + e.Message);
-            }
-
-            for (int i = 0; i < producciones.Count; i++)
-            {
-                Console.WriteLine("Produccion: " + producciones[i].GetLadoIzquierdo() + " " + producciones[i].GetLadoDerecho());
             }
 
             return producciones;

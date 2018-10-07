@@ -21,6 +21,11 @@ namespace AnalizadorSintactico
 
         public void Analizar(string cadena)
         {
+            for(int i = 0; i < reglas.Count; i++)
+            {
+                Console.WriteLine(reglas[i].AString());
+            }
+
             AutomataPila automata = new AutomataPila(reglas);
             automata.Simular(cadena);
         }
@@ -31,6 +36,9 @@ namespace AnalizadorSintactico
             List<string> terminales = gramatica.GetTerminales();
             string noTerminalActual = "";
 
+            Regla regla = new Regla("q0", "#", "Z", "q1", gramatica.GetSimboloInicial());
+            reglas.Add(regla);
+
             for (int i = 0; i < gramatica.GetNoTerminales().Count; i++)
             {
                 noTerminalActual = noTerminales[i].ToString();
@@ -40,12 +48,12 @@ namespace AnalizadorSintactico
                 {
                     if (noTerminalActual.Equals(gramatica.GetProducciones()[j].GetLadoIzquierdo().ToString()))
                     {
-                        Regla regla = new Regla("q", "#", noTerminalActual, "q", gramatica.GetProducciones()[j].GetLadoDerecho().ToString());
+                        regla = new Regla("q1", "#", noTerminalActual, "q1", gramatica.GetProducciones()[j].GetLadoDerecho().ToString());
                         reglas.Add(regla);
                     }
                     else
                     {
-                        break;
+                        continue;
                     }
                 }
             }
@@ -53,9 +61,12 @@ namespace AnalizadorSintactico
             //Para cada terminal 
             for (int i = 0; i < terminales.Count; i++)
             {
-                Regla regla = new Regla("q", terminales[i].ToString(), terminales[i].ToString(), "q", "#");
+                regla = new Regla("q1", terminales[i].ToString(), terminales[i].ToString(), "q1", "#");
                 reglas.Add(regla);
             }
+
+            regla = new Regla("q1", "#", "Z", "q2", "#");
+            reglas.Add(regla);
         }
 
     }

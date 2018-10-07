@@ -72,5 +72,12 @@ namespace AnalizadorSintactico
         {
             this.accion = accion;
         }
+
+        public string AString()
+        {
+            return estadoActual + "," + entrada + "," + cimaPila
+                    + "," + estadoNuevo + "," + accion;
+        }
+
     }
 }
