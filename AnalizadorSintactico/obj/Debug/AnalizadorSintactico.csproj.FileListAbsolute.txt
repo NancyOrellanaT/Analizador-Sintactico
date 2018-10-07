@@ -1,0 +1,7 @@
+C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\bin\Debug\AnalizadorSintactico.exe.config
+C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\bin\Debug\AnalizadorSintactico.exe
+C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\bin\Debug\AnalizadorSintactico.pdb
+C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.csprojAssemblyReference.cache
+C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.csproj.CoreCompileInputs.cache
+C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.exe
+C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.pdb
