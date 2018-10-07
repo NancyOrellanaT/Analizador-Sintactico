@@ -22,6 +22,8 @@ namespace AnalizadorSintactico
 
         public void Simular()
         {
+            SepararAccion();
+
             Stack<string> pila = new Stack<string>();
             pila.Push("z0");
 
@@ -53,6 +55,8 @@ namespace AnalizadorSintactico
                 //Revisamos todas las reglas
                 for (int i = 0; i < reglas.Count; i++)
                 {
+                    Regla regla = reglas[i];
+
                     Stack<String> pilaCopia = new Stack<String>(pila.Reverse());
 
                     List<Regla> caminoCopia = new List<Regla>();
@@ -61,13 +65,14 @@ namespace AnalizadorSintactico
                         caminoCopia.Add(camino[k]);
                     }
 
-                    estado = estadoOriginal;
-
-                    Regla regla = reglas[i];
+                    estado = estadoOriginal;  
 
                     //Comprobamos si es la regla adecuada 
                     if (regla.GetEstadoActual().Equals(estado))
                     {
+                        string cimapila = regla.GetCimaPila();
+                        string pilacima = pilaCopia.ElementAt(pilaCopia.Count - 1);
+
                         //Comprobamos el tope de la pila
                         if (regla.GetCimaPila().Equals(pilaCopia.ElementAt(pilaCopia.Count - 1)) || regla.GetCimaPila().Equals("Z"))
                         {
@@ -78,7 +83,12 @@ namespace AnalizadorSintactico
                                 //Apilamos o desapilamos
                                 if (regla.GetAccion().Equals("#"))
                                 {
-                                    pilaCopia.Pop();
+                                    Stack<String> pilaAux = new Stack<String>();
+                                    for(int k = 0; k < pilaCopia.Count - 1; k++)
+                                    {
+                                        pilaAux.Push(pilaCopia.ElementAt(k));
+                                    }
+                                    pilaCopia = pilaAux;
                                 }
                                 else if (!regla.GetAccion().Equals("Z"))
                                 {
@@ -94,7 +104,7 @@ namespace AnalizadorSintactico
                                     caminoCopia2.Add(caminoCopia[k]);
                                 }
 
-                                ProbarRegla(estado, posicion + 1, new Stack<String>(pilaCopia.Reverse()), caminoCopia2);
+                                ProbarRegla(estado, posicion + 1, new Stack<String>(pilaCopia), caminoCopia2);
                             }
                             else if (regla.GetEntrada().Equals("#"))
                             {
@@ -102,7 +112,12 @@ namespace AnalizadorSintactico
                                 //Apilamos o desapilamos
                                 if (regla.GetAccion().Equals("#"))
                                 {
-                                    pilaCopia.Pop();
+                                    Stack<String> pilaAux = new Stack<String>();
+                                    for (int k = 0; k < pilaCopia.Count - 1; k++)
+                                    {
+                                        pilaAux.Push(pilaCopia.ElementAt(k));
+                                    }
+                                    pilaCopia = pilaAux;
                                 }
                                 else if (!regla.GetAccion().Equals("Z"))
                                 {
@@ -119,7 +134,7 @@ namespace AnalizadorSintactico
                                     caminoCopia2.Add(caminoCopia[k]);
                                 }
 
-                                ProbarRegla(estado, posicion + 1, new Stack<String>(pilaCopia.Reverse()), caminoCopia2);
+                                ProbarRegla(estado, posicion + 1, new Stack<String>(pilaCopia), caminoCopia2);
                             }
                         }
                     }
@@ -131,6 +146,24 @@ namespace AnalizadorSintactico
                 if (pila.Count - 1 >= 0 && pila.ElementAt(pila.Count - 1).Equals("z0"))
                 {
                     aceptado = true;
+                }
+            }
+        }
+
+        private void SepararAccion()
+        {
+            List<Regla> lista = reglas;
+
+            foreach (Regla regla in lista)
+            {
+                String[] accion = regla.GetAccion().Split(regla.GetCimaPila()[0]);
+                try
+                {
+                    regla.SetAccion(accion[0]);
+                }
+                catch (Exception e)
+                {
+
                 }
             }
         }

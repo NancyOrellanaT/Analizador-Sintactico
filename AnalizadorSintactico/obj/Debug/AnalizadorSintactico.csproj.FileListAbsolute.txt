@@ -5,3 +5,10 @@ C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\obj\Debug\A
 C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.csproj.CoreCompileInputs.cache
 C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.exe
 C:\Users\asus\source\repos\AnalizadorSintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.pdb
+C:\Users\Angel\source\repos\Analizador-Sintactico\AnalizadorSintactico\bin\Debug\AnalizadorSintactico.exe.config
+C:\Users\Angel\source\repos\Analizador-Sintactico\AnalizadorSintactico\bin\Debug\AnalizadorSintactico.exe
+C:\Users\Angel\source\repos\Analizador-Sintactico\AnalizadorSintactico\bin\Debug\AnalizadorSintactico.pdb
+C:\Users\Angel\source\repos\Analizador-Sintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.csprojResolveAssemblyReference.cache
+C:\Users\Angel\source\repos\Analizador-Sintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.csproj.CoreCompileInputs.cache
+C:\Users\Angel\source\repos\Analizador-Sintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.exe
+C:\Users\Angel\source\repos\Analizador-Sintactico\AnalizadorSintactico\obj\Debug\AnalizadorSintactico.pdb
